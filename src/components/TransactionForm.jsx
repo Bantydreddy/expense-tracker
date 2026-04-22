@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 
 const categories = ["food", "housing", "utilities", "transport", "entertainment", "salary", "other"];
@@ -28,9 +29,9 @@ function TransactionForm({ onAdd }) {
   };
 
   return (
-    <div className="add-transaction">
-      <h2>Add Transaction</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="panel">
+      <h2><span className="panel-icon">🌱</span> Add Transaction</h2>
+      <form onSubmit={handleSubmit} className="form-grid">
         <input
           type="text"
           placeholder="Description"
@@ -52,7 +53,7 @@ function TransactionForm({ onAdd }) {
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
-        <button type="submit">Add</button>
+        <button type="submit" className="btn-add">+ Add</button>
       </form>
     </div>
   );

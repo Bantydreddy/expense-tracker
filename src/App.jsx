@@ -1,9 +1,10 @@
-
 import { useState } from 'react'
 import './App.css'
 import Summary from './components/Summary'
 import TransactionForm from './components/TransactionForm'
 import TransactionList from './components/TransactionList'
+import ConfirmDialog from './components/ConfirmDialog'
+import MonthlySummary from './components/MonthlySummary'
 
 function App() {
   const [transactions, setTransactions] = useState([
@@ -17,17 +18,44 @@ function App() {
     { id: 8, description: "Netflix", amount: 15, type: "expense", category: "entertainment", date: "2025-01-10" },
   ]);
 
+  const [pendingDelete, setPendingDelete] = useState(null);
+
   const handleAdd = (newTransaction) => {
     setTransactions(prev => [...prev, newTransaction]);
   };
 
+  const handleDeleteRequest = (transaction) => {
+    setPendingDelete(transaction);
+  };
+
+  const handleDeleteConfirm = () => {
+    setTransactions(prev => prev.filter(t => t.id !== pendingDelete.id));
+    setPendingDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setPendingDelete(null);
+  };
+
   return (
     <div className="app">
-      <h1>Finance Tracker</h1>
-      <p className="subtitle">Track your income and expenses</p>
+      <div className="app-header">
+        <h1>Finance <span>Grove</span></h1>
+        <p>Track your income and expenses</p>
+      </div>
+
       <Summary transactions={transactions} />
+      <MonthlySummary transactions={transactions} />
       <TransactionForm onAdd={handleAdd} />
-      <TransactionList transactions={transactions} />
+      <TransactionList transactions={transactions} onDeleteRequest={handleDeleteRequest} />
+
+      {pendingDelete && (
+        <ConfirmDialog
+          transaction={pendingDelete}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
     </div>
   );
 }
